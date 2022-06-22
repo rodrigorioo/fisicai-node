@@ -41,14 +41,18 @@ class ProblemSolver {
                     // When we have all the data, we process it
                     const problem = new Problem_1.Problem(this.requested, this.data);
                     // Check resolution
-                    let resolution;
+                    let resolution = [];
                     try {
                         resolution = problem.check(this.requested, this.data);
                     }
                     catch (errResolution) {
                         return failure(errResolution);
                     }
-                    return success(resolution);
+                    return success({
+                        data: this.data,
+                        requested: this.requested,
+                        resolution,
+                    });
                 });
             }).catch((errProcessMessage) => {
                 return failure(errProcessMessage);

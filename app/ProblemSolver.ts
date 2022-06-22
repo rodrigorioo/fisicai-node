@@ -3,6 +3,12 @@ import {Datum} from "./Datum";
 import {Problem} from "./Problem";
 import {Operations} from "./Topics/Topic";
 
+interface ReturnResolution {
+    data: Array<Datum>,
+    requested: Array<keyof Operations>,
+    resolution: Array<Datum>,
+}
+
 class ProblemSolver {
 
     problem : string; // Problem to resolve
@@ -18,9 +24,9 @@ class ProblemSolver {
 
     }
 
-    processProblem () : Promise<Array<Datum>> {
+    processProblem () : Promise<ReturnResolution> {
 
-        return new Promise<Array<Datum>>( (success, failure) => {
+        return new Promise<ReturnResolution>( (success, failure) => {
 
             // Init Wit class
             let wit : Wit;
@@ -48,7 +54,7 @@ class ProblemSolver {
                     const problem = new Problem(this.requested, this.data);
 
                     // Check resolution
-                    let resolution;
+                    let resolution : Array<Datum> = [];
 
                     try {
                         resolution = problem.check(this.requested, this.data);
@@ -58,7 +64,11 @@ class ProblemSolver {
 
                     }
 
-                    return success(resolution);
+                    return success({
+                        data: this.data,
+                        requested: this.requested,
+                        resolution,
+                    });
                 });
 
             }).catch( (errProcessMessage : Error) => {

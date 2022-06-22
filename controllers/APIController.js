@@ -23,7 +23,7 @@ exports.solveProblem = (req, res) => {
         return;
     }
 
-    res.status(421).send({
+    res.status(422).send({
         message: 'Problem parameter needed',
     });
 };
