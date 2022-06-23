@@ -77,7 +77,7 @@ class ProblemSolver {
         });
     }
 
-    loadRequestedData (entities : Array<Entity>) {
+    loadRequestedData (entities : Array<Entity>) : void {
 
         entities.forEach( (entity : Entity, iEntity : number) => {
 
@@ -97,7 +97,7 @@ class ProblemSolver {
         });
     }
 
-    loadData (entities : Array<Entity>) {
+    loadData (entities : Array<Entity>) : Promise<void> {
 
         return new Promise<void>( async (success, failure) => {
 

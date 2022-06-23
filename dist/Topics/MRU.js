@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MRU = void 0;
 const Topic_1 = require("./Topic");
 const Datum_1 = require("../Datum");
+const { DateTime } = require("luxon");
 class MRU extends Topic_1.Topic {
     constructor() {
         super();
@@ -42,19 +43,21 @@ class MRU extends Topic_1.Topic {
         return new Datum_1.Datum("posicion_inicial", "0", "m");
     }
     hora(equation) {
-        let date = new Date();
+        let date;
         let time = 0;
         for (const datum of this.data) {
             if (datum.name === "fecha") {
-                date = new Date(datum.value);
+                date = DateTime.fromISO(datum.value);
             }
             if (datum.name === "tiempo") {
                 time = parseInt(datum.value);
             }
         }
-        const newDate = new Date(date.getTime());
-        newDate.setSeconds(newDate.getSeconds() + time);
-        const difference = newDate.getTime() - date.getTime();
+        const newDate = DateTime.fromISO(date.toISO());
+        newDate.plus({ seconds: time });
+        const difference = newDate.diff(date, ["days", "hours", "minutes", "seconds"]);
+        difference.toObject();
+        return new Datum_1.Datum("hora", `Dias: ${difference.days} - Hora: ${difference.hours}:${difference.minutes}:${difference.seconds}`, "");
     }
     rapidez(equation) {
         this.data.forEach((datum) => {

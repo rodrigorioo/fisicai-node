@@ -38,7 +38,7 @@ class Wit {
         this.traits = [];
     }
 
-    processMessage (message : string) {
+    processMessage (message : string) : Promise<void> {
 
         return new Promise<void>( (success, failure) => {
 

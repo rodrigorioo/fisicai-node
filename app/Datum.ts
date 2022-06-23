@@ -141,7 +141,7 @@ class Datum {
         return (regexMatch) ? regexMatch[0] : "";
     }
 
-    parseUnit () {
+    parseUnit () : void {
 
         switch(this.name) {
 
