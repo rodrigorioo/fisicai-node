@@ -1,5 +1,6 @@
 import {MRUOperations, Operations, Topic} from "./Topic";
 import {Datum} from "../Datum";
+const { DateTime } = require("luxon");
 
 interface MRUOperationsMethods {
     distancia : (equation : string) => Datum,
@@ -63,9 +64,29 @@ class MRU extends Topic {
         return new Datum("posicion_inicial", "0", "m");
     }
 
-    // TODO:
     hora (equation : string) {
 
+        let date : typeof DateTime;
+        let time : number = 0;
+
+        for(const datum of this.data) {
+
+            if(datum.name === "fecha") {
+                date = DateTime.fromISO(datum.value);
+            }
+
+            if(datum.name === "tiempo") {
+                time = parseInt(datum.value);
+            }
+        }
+
+        const newDate : typeof DateTime = DateTime.fromISO(date.toISO());
+        newDate.plus({seconds: time});
+
+        const difference = newDate.diff(date, ["days", "hours", "minutes", "seconds"]);
+        difference.toObject();
+
+        return new Datum("hora", `Dias: ${difference.days} - Hora: ${difference.hours}:${difference.minutes}:${difference.seconds}`, "");
     }
 
     rapidez (equation : string) {
