@@ -48,6 +48,7 @@ class ProblemSolver {
                     catch (errResolution) {
                         return failure(errResolution);
                     }
+                    // Return the response
                     return success({
                         data: this.data,
                         requested: this.requested,
@@ -75,16 +76,23 @@ class ProblemSolver {
     loadData(entities) {
         return new Promise((success, failure) => __awaiter(this, void 0, void 0, function* () {
             for (const entity of entities) {
+                /** OLD CODE */
                 // Init data
                 const datum = new Datum_1.Datum();
                 const responseDatumLoad = yield datum.loadEntity(entity).catch((errDatumLoad) => {
-                    return failure(errDatumLoad);
+                    // return failure(errDatumLoad);
+                    return null;
                 });
+                // Check for null and continue with the next entity
+                if (!responseDatumLoad) {
+                    continue;
+                }
                 // If instance of Datum, we add to the data array
                 if (responseDatumLoad instanceof Datum_1.Datum) {
                     this.data.push(responseDatumLoad);
                 }
-                else if (responseDatumLoad instanceof Array) { // It it's not, we load the new entities
+                else {
+                    // It it's not, we load the new entities
                     yield this.loadData(responseDatumLoad).catch((errLoadData) => {
                         return failure(errLoadData);
                     });

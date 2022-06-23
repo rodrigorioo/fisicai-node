@@ -20,10 +20,10 @@ type Entity = {
 
 class Wit {
 
-    url: string;
-    accessToken: string;
-    entities: Array<Entity>;
-    traits: Array<any>;
+    url: string = "";
+    accessToken: string = "";
+    entities: Array<Entity> = [];
+    traits: Array<any> = [];
 
     constructor () {
 

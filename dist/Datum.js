@@ -66,6 +66,8 @@ class Datum {
                         this.unit = "";
                     }
                     break;
+                default:
+                    return failure("Entity name not recognized");
             }
             // Parse data
             this.parseUnit();

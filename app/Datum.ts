@@ -1,4 +1,7 @@
 import {Entity, Wit} from "./Wit";
+import {fail} from "assert";
+
+type LoadEntityReturn = Promise<Datum> | Promise<Array<Entity>>;
 
 class Datum {
 
@@ -16,7 +19,7 @@ class Datum {
         this.parseUnit();
     }
 
-    loadEntity (entity : Entity) : Promise<Datum> | Promise<Array<Entity>> {
+    loadEntity (entity : Entity) : LoadEntityReturn {
 
         return new Promise<any>( async (success, failure) => {
 
@@ -81,6 +84,10 @@ class Datum {
                     }
 
                     break;
+
+                default:
+
+                    return failure("Entity name not recognized");
             }
 
             // Parse data

@@ -64,6 +64,7 @@ class ProblemSolver {
 
                     }
 
+                    // Return the response
                     return success({
                         data: this.data,
                         requested: this.requested,
@@ -103,19 +104,28 @@ class ProblemSolver {
 
             for(const entity of entities) {
 
+                /** OLD CODE */
+
                 // Init data
                 const datum = new Datum();
-                const responseDatumLoad: Array<Entity> | Datum | unknown = await datum.loadEntity(entity).catch((errDatumLoad: string) => {
-                    return failure(errDatumLoad);
+                const responseDatumLoad: Array<Entity> | Datum | null = await datum.loadEntity(entity).catch((errDatumLoad: string) => {
+                    // return failure(errDatumLoad);
+                    return null;
                 });
+
+                // Check for null and continue with the next entity
+                if(!responseDatumLoad) {
+                    continue;
+                }
 
                 // If instance of Datum, we add to the data array
                 if (responseDatumLoad instanceof Datum) {
 
                     this.data.push(responseDatumLoad);
 
-                } else if (responseDatumLoad instanceof Array) { // It it's not, we load the new entities
+                } else {
 
+                    // It it's not, we load the new entities
                     await this.loadData(responseDatumLoad).catch((errLoadData: string) => {
                         return failure(errLoadData);
                     });

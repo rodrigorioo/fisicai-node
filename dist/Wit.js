@@ -4,6 +4,10 @@ exports.Wit = void 0;
 const axios = require('axios');
 class Wit {
     constructor() {
+        this.url = "";
+        this.accessToken = "";
+        this.entities = [];
+        this.traits = [];
         if (!process.env.WIT_URL || !process.env.WIT_ACCESS_TOKEN) {
             throw new Error("Access Token not defined");
         }
