@@ -41,8 +41,20 @@ class MRU extends Topic_1.Topic {
     posicion_inicial(equation) {
         return new Datum_1.Datum("posicion_inicial", "0", "m");
     }
-    // TODO:
     hora(equation) {
+        let date = new Date();
+        let time = 0;
+        for (const datum of this.data) {
+            if (datum.name === "fecha") {
+                date = new Date(datum.value);
+            }
+            if (datum.name === "tiempo") {
+                time = parseInt(datum.value);
+            }
+        }
+        const newDate = new Date(date.getTime());
+        newDate.setSeconds(newDate.getSeconds() + time);
+        const difference = newDate.getTime() - date.getTime();
     }
     rapidez(equation) {
         this.data.forEach((datum) => {

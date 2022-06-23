@@ -14,7 +14,6 @@ class ProblemSolver {
     problem : string; // Problem to resolve
     requested : Array<keyof Operations>; // Data that are requested
     data : Array<Datum>; // Data of problem
-    topic : any;
 
     constructor (problem : string) {
 
@@ -103,8 +102,6 @@ class ProblemSolver {
         return new Promise<void>( async (success, failure) => {
 
             for(const entity of entities) {
-
-                /** OLD CODE */
 
                 // Init data
                 const datum = new Datum();

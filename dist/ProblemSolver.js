@@ -76,7 +76,6 @@ class ProblemSolver {
     loadData(entities) {
         return new Promise((success, failure) => __awaiter(this, void 0, void 0, function* () {
             for (const entity of entities) {
-                /** OLD CODE */
                 // Init data
                 const datum = new Datum_1.Datum();
                 const responseDatumLoad = yield datum.loadEntity(entity).catch((errDatumLoad) => {

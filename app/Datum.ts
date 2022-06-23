@@ -53,7 +53,6 @@ class Datum {
 
                     // Wit detects "EN UN SEGUNDO" like a DateTime
                     // For fix this we remove all ancestor words and we send this new value to Wit for extract the time
-
                     if(entity.grain === "second") {
 
                         // Create new value to send
