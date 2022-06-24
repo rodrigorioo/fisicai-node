@@ -33,7 +33,7 @@ abstract class Topic {
         const equation : string | undefined = this.equations[nameOfEquation];
 
         // If it's string
-        if(equation) {
+        if(equation !== undefined) {
 
             // Found missing data of equation
             const missingData = this.missingData(equation);
@@ -54,7 +54,7 @@ abstract class Topic {
         });
 
         // Search which data we not have
-        const missingData = equation.match(/[a-zA-Z_?]+/);
+        const missingData = equation.match(/[a-zA-Z_?]+/g);
 
         if(missingData) {
             return Array.from(missingData);

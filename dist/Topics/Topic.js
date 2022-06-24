@@ -10,7 +10,7 @@ class Topic {
     solveEquation(nameOfEquation) {
         const equation = this.equations[nameOfEquation];
         // If it's string
-        if (equation) {
+        if (equation !== undefined) {
             // Found missing data of equation
             const missingData = this.missingData(equation);
             // Solve all missing data
@@ -25,7 +25,7 @@ class Topic {
             equation = equation.replace(datum.name, datum.value.toString());
         });
         // Search which data we not have
-        const missingData = equation.match(/[a-zA-Z_?]+/);
+        const missingData = equation.match(/[a-zA-Z_?]+/g);
         if (missingData) {
             return Array.from(missingData);
         }

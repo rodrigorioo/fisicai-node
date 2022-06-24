@@ -6,6 +6,7 @@ interface MRUVOperationsMethods {
     velocidad_final : (equation : string) => Datum,
     tiempo_inicial : (equation : string) => Datum,
     tiempo_final : (equation : string) => Datum,
+    tiempo : (equation : string) => Datum,
     posicion_final : (equation : string) => Datum,
     posicion : (equation : string) => Datum,
     aceleracion: (equation : string) => Datum,
@@ -88,20 +89,10 @@ class MRUV extends Topic {
     }
 
     tiempo_inicial (equation : string) {
-
-        this.data.forEach( (datum : Datum) => {
-            equation = equation.replace(datum.name, datum.value);
-        });
-
         return new Datum("tiempo_inicial", "0", "s");
     }
 
     tiempo_final (equation : string) {
-
-        this.data.forEach( (datum : Datum) => {
-            equation = equation.replace(datum.name, datum.value);
-        });
-
         return new Datum("tiempo_final", "0", "s");
     }
 

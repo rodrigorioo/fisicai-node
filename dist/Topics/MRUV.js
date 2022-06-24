@@ -56,15 +56,9 @@ class MRUV extends Topic_1.Topic {
         return new Datum_1.Datum("rapidez", this.evaluateMathString(equation), "m/s");
     }
     tiempo_inicial(equation) {
-        this.data.forEach((datum) => {
-            equation = equation.replace(datum.name, datum.value);
-        });
         return new Datum_1.Datum("tiempo_inicial", "0", "s");
     }
     tiempo_final(equation) {
-        this.data.forEach((datum) => {
-            equation = equation.replace(datum.name, datum.value);
-        });
         return new Datum_1.Datum("tiempo_final", "0", "s");
     }
     tiempo(equation) {
