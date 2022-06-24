@@ -21,24 +21,20 @@ class MRUV extends Topic {
         this.name = "MRUV";
         this.equations = {
             'velocidad_inicial': '0',
-            // 'velocidad_final': 'velocidad_inicial + (aceleracion * tiempo)',
+            'velocidad_final': 'velocidad_inicial + (aceleracion * tiempo)',
             'velocidad': 'velocidad_inicial + (aceleracion * tiempo)',
 
             'rapidez': 'velocidad_inicial + (aceleracion * tiempo)',
 
             'tiempo_inicial': '0',
-            // 'tiempo_final': '0',
-            // 'tiempo': '(velocidad_final - velocidad_inicial) / aceleracion',
+            'tiempo_final': '0',
             'tiempo': '(velocidad - velocidad_inicial) / aceleracion',
 
             'posicion_final': 'posicion_inicial + (velocidad_inicial * tiempo) + ( (aceleracion * (tiempo * tiempo)) / 2)',
             'posicion_inicial': '0',
             'posicion': 'posicion_inicial + (velocidad_inicial * tiempo) + ( (aceleracion * (tiempo * tiempo)) / 2)',
 
-            // 'aceleracion' => '(velocidad_final - velocidad_inicial) / (tiempo_final - tiempo_inicial)',
             'aceleracion': '(velocidad - velocidad_inicial) / (tiempo - tiempo_inicial)',
-
-            // 'posicion_inicial + (velocidad_inicial * tiempo) + ( (aceleracion * (tiempo * tiempo)) / 2)' => 'velocidad_inicial + (aceleracion * tiempo)',
         }
     }
 

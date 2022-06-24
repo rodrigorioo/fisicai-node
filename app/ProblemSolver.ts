@@ -89,6 +89,9 @@ class ProblemSolver {
                 // Parse and remove accents
                 value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+                // Remove spaces and replace with underscore
+                value = value.replace(/ /g, "_");
+
                 if(value === "metros")
                     value = "distancia";
 
@@ -106,7 +109,6 @@ class ProblemSolver {
                 // Init data
                 const datum = new Datum();
                 const responseDatumLoad: Array<Entity> | Datum | null = await datum.loadEntity(entity).catch((errDatumLoad: string) => {
-                    // return failure(errDatumLoad);
                     return null;
                 });
 

@@ -67,6 +67,8 @@ class ProblemSolver {
                 let value = entities[iEntity + 1].value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 // Parse and remove accents
                 value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                // Remove spaces and replace with underscore
+                value = value.replace(/ /g, "_");
                 if (value === "metros")
                     value = "distancia";
                 this.requested.push(value);
@@ -79,7 +81,6 @@ class ProblemSolver {
                 // Init data
                 const datum = new Datum_1.Datum();
                 const responseDatumLoad = yield datum.loadEntity(entity).catch((errDatumLoad) => {
-                    // return failure(errDatumLoad);
                     return null;
                 });
                 // Check for null and continue with the next entity
