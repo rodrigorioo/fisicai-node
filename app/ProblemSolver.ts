@@ -170,4 +170,4 @@ class ProblemSolver {
     }
 }
 
-export {ProblemSolver};
+export {ProblemSolver, DataObj};

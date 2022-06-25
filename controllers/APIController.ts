@@ -1,10 +1,17 @@
-const {ProblemSolver} = require("../dist/ProblemSolver");
+import express, { Express, Request, Response } from 'express';
 
+import {DataObj, ProblemSolver} from "../app/ProblemSolver";
+import {Operations} from "../app/Topics/Topic";
 
-exports.solveProblem = (req, res) => {
+interface IResolution {
+    requested : Array<keyof Operations>,
+    data : Array<DataObj>,
+}
 
-    const problem = req.query.problem || req.body.problem;
-    const resolution = req.query.resolution || req.body.resolution;
+exports.solveProblem = (req : Request, res : Response) => {
+
+    const problem : string = req.query.problem || req.body.problem;
+    const resolution : IResolution = req.query.resolution || req.body.resolution;
 
     if (resolution) {
 
@@ -33,9 +40,12 @@ exports.solveProblem = (req, res) => {
 
         try {
             problemSolved = problemSolver.resolveProblem();
-        } catch (errResolveProblem) {
+        } catch (errResolveProblem : unknown) {
+
+            const message : string = (errResolveProblem instanceof Error) ? errResolveProblem.message : "Error in solve problem";
+
             res.status(500).send({
-                message: errResolveProblem.message,
+                message: message,
             });
             return;
         }

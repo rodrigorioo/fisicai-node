@@ -1,4 +1,4 @@
-const express = require('express');
+import express, { Express, Request, Response } from 'express';
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -6,7 +6,7 @@ const routes = require("./routes");
 require('dotenv').config();
 
 // Setup
-const app = express();
+const app : Express = express();
 
 app.use(morgan('tiny'));
 app.use(cors());

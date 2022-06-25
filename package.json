@@ -5,9 +5,9 @@
   "main": "app",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "serve": "npx tsc && node app.js"
+    "start": "node dist/app.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\"",
+    "serve": "npx tsc && node dist/app.js"
   },
   "author": "",
   "license": "ISC",
