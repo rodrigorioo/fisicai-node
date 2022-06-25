@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const routes = require("./routes");
+import routes from "./routes";
 require('dotenv').config();
 
 // Setup
@@ -23,4 +23,4 @@ app.listen(port, () => {
 });
 
 // Export the Express API
-module.exports = app;
+export default app;

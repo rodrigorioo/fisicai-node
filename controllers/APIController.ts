@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import {Request, Response } from 'express';
 
 import {DataObj, ProblemSolver} from "../app/ProblemSolver";
 import {Operations} from "../app/Topics/Topic";
@@ -8,7 +8,7 @@ interface IResolution {
     data : Array<DataObj>,
 }
 
-exports.solveProblem = (req : Request, res : Response) => {
+const solveProblem = (req : Request, res : Response) => {
 
     const problem : string = req.query.problem || req.body.problem;
     const resolution : IResolution = req.query.resolution || req.body.resolution;
@@ -77,4 +77,10 @@ exports.solveProblem = (req : Request, res : Response) => {
     res.status(422).send({
         message: 'Problem or resolution parameter needed',
     });
+}
+
+const APIController = {
+    solveProblem,
 };
+
+export default APIController;
