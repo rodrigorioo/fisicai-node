@@ -21,3 +21,6 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
 });
+
+// Export the Express API
+module.exports = app;
