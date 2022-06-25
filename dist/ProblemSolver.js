@@ -14,9 +14,9 @@ const Wit_1 = require("./Wit");
 const Datum_1 = require("./Datum");
 const Problem_1 = require("./Problem");
 class ProblemSolver {
-    constructor(problem) {
+    constructor(problem, requested = []) {
         this.problem = problem;
-        this.requested = [];
+        this.requested = requested;
         this.data = [];
     }
     processProblem() {
@@ -39,26 +39,40 @@ class ProblemSolver {
                 });
                 this.loadData(entitiesWithoutRequested).then(() => {
                     // When we have all the data, we process it
-                    const problem = new Problem_1.Problem(this.requested, this.data);
-                    // Check resolution
-                    let resolution = [];
+                    let problemSolved;
                     try {
-                        resolution = problem.check(this.requested, this.data);
+                        problemSolved = this.resolveProblem();
                     }
-                    catch (errResolution) {
-                        return failure(errResolution);
+                    catch (errResolveProblem) {
+                        return failure(errResolveProblem);
                     }
-                    // Return the response
-                    return success({
-                        data: this.data,
-                        requested: this.requested,
-                        resolution,
-                    });
+                    // Return the solution
+                    return success(problemSolved);
                 });
             }).catch((errProcessMessage) => {
                 return failure(errProcessMessage);
             });
         });
+    }
+    resolveProblem() {
+        // When we have all the data, we process it
+        const problem = new Problem_1.Problem(this.requested, this.data);
+        // Check resolution
+        let resolution = [];
+        try {
+            resolution = problem.check(this.requested, this.data);
+        }
+        catch (errResolution) {
+            if (errResolution instanceof Error)
+                throw new Error(errResolution.message);
+            throw new Error("Error when check the problem");
+        }
+        // Return the response
+        return {
+            data: this.data,
+            requested: this.requested,
+            resolution,
+        };
     }
     loadRequestedData(entities) {
         entities.forEach((entity, iEntity) => {
@@ -100,6 +114,11 @@ class ProblemSolver {
             }
             return success();
         }));
+    }
+    addData(data) {
+        for (const dataObject of data) {
+            this.data.push(new Datum_1.Datum(dataObject.name, dataObject.value, dataObject.unit));
+        }
     }
 }
 exports.ProblemSolver = ProblemSolver;

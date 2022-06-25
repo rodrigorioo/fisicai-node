@@ -9,16 +9,22 @@ interface ReturnResolution {
     resolution: Array<Datum>,
 }
 
+interface DataObj {
+    name : string,
+    value : string,
+    unit : string,
+}
+
 class ProblemSolver {
 
     problem : string; // Problem to resolve
     requested : Array<keyof Operations>; // Data that are requested
     data : Array<Datum>; // Data of problem
 
-    constructor (problem : string) {
+    constructor (problem : string, requested : Array<keyof Operations> = []) {
 
         this.problem = problem;
-        this.requested = [];
+        this.requested = requested;
         this.data = [];
 
     }
@@ -50,31 +56,49 @@ class ProblemSolver {
                 this.loadData(entitiesWithoutRequested).then( () => {
 
                     // When we have all the data, we process it
-                    const problem = new Problem(this.requested, this.data);
-
-                    // Check resolution
-                    let resolution : Array<Datum> = [];
+                    let problemSolved : ReturnResolution;
 
                     try {
-                        resolution = problem.check(this.requested, this.data);
-                    } catch(errResolution : unknown) {
-
-                        return failure(errResolution);
-
+                        problemSolved = this.resolveProblem();
+                    } catch(errResolveProblem : unknown) {
+                        return failure(errResolveProblem);
                     }
 
-                    // Return the response
-                    return success({
-                        data: this.data,
-                        requested: this.requested,
-                        resolution,
-                    });
+                    // Return the solution
+                    return success(problemSolved);
                 });
 
             }).catch( (errProcessMessage : Error) => {
                 return failure(errProcessMessage);
             });
         });
+    }
+
+    resolveProblem () : ReturnResolution {
+
+        // When we have all the data, we process it
+        const problem = new Problem(this.requested, this.data);
+
+        // Check resolution
+        let resolution : Array<Datum> = [];
+
+        try {
+            resolution = problem.check(this.requested, this.data);
+        } catch(errResolution : unknown) {
+
+            if(errResolution instanceof Error)
+                throw new Error(errResolution.message);
+
+            throw new Error("Error when check the problem");
+
+        }
+
+        // Return the response
+        return {
+            data: this.data,
+            requested: this.requested,
+            resolution,
+        };
     }
 
     loadRequestedData (entities : Array<Entity>) : void {
@@ -135,6 +159,14 @@ class ProblemSolver {
             return success();
 
         });
+    }
+
+    addData (data : Array<DataObj>) : void {
+
+        for(const dataObject of data) {
+            this.data.push(new Datum(dataObject.name, dataObject.value, dataObject.unit));
+        }
+
     }
 }
 
