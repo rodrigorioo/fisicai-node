@@ -44,11 +44,11 @@ class MRUV extends Topic {
 
     // Equations
 
-    velocidad_inicial (equation : string) {
+    velocidad_inicial (equation : string) : Datum {
         return new Datum("velocidad_inicial", "0", "m/s");
     }
 
-    velocidad_final (equation : string) {
+    velocidad_final (equation : string) : Datum {
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
@@ -57,7 +57,7 @@ class MRUV extends Topic {
         return new Datum("velocidad_final", this.evaluateMathString(equation), "m/s");
     }
 
-    velocidad (equation : string) {
+    velocidad (equation : string) : Datum {
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
@@ -69,7 +69,7 @@ class MRUV extends Topic {
         return new Datum("velocidad", this.evaluateMathString(equation), "m/s");
     }
 
-    rapidez (equation : string) {
+    rapidez (equation : string) : Datum {
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
@@ -84,15 +84,15 @@ class MRUV extends Topic {
         return new Datum("rapidez", this.evaluateMathString(equation), "m/s");
     }
 
-    tiempo_inicial (equation : string) {
+    tiempo_inicial (equation : string) : Datum {
         return new Datum("tiempo_inicial", "0", "s");
     }
 
-    tiempo_final (equation : string) {
+    tiempo_final (equation : string) : Datum {
         return new Datum("tiempo_final", "0", "s");
     }
 
-    tiempo (equation : string) {
+    tiempo (equation : string) : Datum {
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
@@ -101,7 +101,7 @@ class MRUV extends Topic {
         return new Datum("tiempo", this.evaluateMathString(equation), "s");
     }
 
-    aceleracion (equation : string) {
+    aceleracion (equation : string) : Datum {
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
@@ -110,15 +110,15 @@ class MRUV extends Topic {
         return new Datum("aceleracion", this.evaluateMathString(equation), "m/s2");
     }
 
-    posicion_inicial (equation : string) {
+    posicion_inicial (equation : string) : Datum {
         return new Datum("posicion_inicial", "0", "m");
     }
 
-    posicion_final (equation : string) {
+    posicion_final (equation : string) : Datum {
         return new Datum("posicion_final", "0", "m");
     }
 
-    posicion (equation : string) {
+    posicion (equation : string) : Datum {
         return new Datum("posicion", "0", "m");
     }
 
