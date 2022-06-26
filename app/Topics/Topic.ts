@@ -1,5 +1,4 @@
 import {Datum} from "../Datum";
-import {MRU} from "./MRU";
 
 interface MRUOperations {
     distancia : string,
@@ -27,31 +26,45 @@ abstract class Topic {
     public name : string = "";
     public equations : Partial<Operations> = {};
     public data : Array<Datum> = [];
+    private missingData : Array<string> = [];
 
     solveEquation (nameOfEquation : keyof Operations) {
 
-        const equation : string | undefined = this.equations[nameOfEquation];
+        // Check if exists in data
+        const existInData : Datum | undefined = this.data.find( (datum) => {
+            return datum.name === nameOfEquation;
+        });
 
-        // If it's string
-        if(equation !== undefined) {
+        // If not exists, we add it
+        if(existInData === undefined) {
 
-            // Found missing data of equation
-            const missingData = this.missingData(equation);
+            const equation : string | undefined = this.equations[nameOfEquation];
 
-            // Solve all missing data
-            this.solveMissingData(missingData);
+            // If it's string
+            if(equation !== undefined) {
 
-            // Solve equation
-            this.data.push(this.processEquation(nameOfEquation, equation));
+                // Found missing data of equation
+                const missingData = this.getMissingData(equation);
+
+                if(!this.existMissingData(missingData)) {
+
+                    // Solve all missing data
+                    this.solveMissingData(missingData);
+
+                    // Solve equation
+                    this.data.push(this.processEquation(nameOfEquation));
+                }
+            }
         }
+
     }
 
-    missingData (equation : string) : Array<string> {
+    getMissingData (equation : string) : Array<string> {
 
         // Replace the equation with data
-        this.data.forEach( (datum : Datum) => {
+        for(const datum of this.data) {
             equation = equation.replace(datum.name, datum.value.toString());
-        });
+        }
 
         // Search which data we not have
         const missingData = equation.match(/[a-zA-Z_?]+/g);
@@ -74,7 +87,43 @@ abstract class Topic {
         return Function('return ' + expression)();
     }
 
-    abstract processEquation (nameOfEquation : keyof Operations, equation : string) : Datum;
+    existMissingData (missingData : Array<string>) : boolean {
+
+        let exist : boolean = false;
+
+        for(const nameOfMissingData of missingData) {
+
+            if(this.missingData.includes(nameOfMissingData)) {
+                exist = true;
+                break;
+            } else {
+                this.missingData.push(nameOfMissingData);
+            }
+        }
+
+        return exist;
+    }
+
+    getValueMatchString (equation : string) : string {
+
+        let valueMathString : string = "0";
+
+        try {
+            valueMathString = this.evaluateMathString(equation);
+
+            // Verify that is a valid value
+            if((valueMathString === null && valueMathString !== "") || (valueMathString == "Infinity")) {
+                valueMathString = "0";
+            }
+
+        } catch (err) {
+            valueMathString = "0";
+        }
+
+        return valueMathString;
+    }
+
+    abstract processEquation (nameOfEquation : keyof Operations) : Datum;
 }
 
 export { Topic, Operations, MRUOperations, MRUVOperations }

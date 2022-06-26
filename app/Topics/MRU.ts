@@ -28,43 +28,59 @@ class MRU extends Topic {
         }
     }
 
-    processEquation(nameOfEquation : keyof MRUOperationsMethods, equation : string) : Datum {
-        return this[nameOfEquation](equation) as Datum;
+    processEquation(nameOfEquation : keyof MRUOperationsMethods) : Datum {
+        return this[nameOfEquation]() as Datum;
     }
 
     // Equations
 
-    distancia (equation : string) {
+    distancia () {
+
+        let equation : string = this.equations["distancia"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        return new Datum("distancia", this.evaluateMathString(equation), "m");
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
+
+        return new Datum("distancia", valueMathString, "m");
     }
 
-    velocidad (equation : string) {
+    velocidad () {
+
+        let equation : string = this.equations["velocidad"] as string;
+
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        return new Datum("velocidad", this.evaluateMathString(equation), "m/s");
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
+
+        return new Datum("velocidad", valueMathString, "m/s");
     }
 
-    tiempo (equation : string) {
+    tiempo () {
+
+        let equation : string = this.equations["tiempo"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        return new Datum("tiempo", this.evaluateMathString(equation), "s");
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
+
+        return new Datum("tiempo", valueMathString, "s");
     }
 
-    posicion_inicial (equation : string) {
+    posicion_inicial () {
         return new Datum("posicion_inicial", "0", "m");
     }
 
-    hora (equation : string) {
+    hora () {
 
         let date : typeof DateTime;
         let time : number = 0;
@@ -89,16 +105,21 @@ class MRU extends Topic {
         return new Datum("hora", `Dias: ${difference.days} - Hora: ${difference.hours}:${difference.minutes}:${difference.seconds}`, "");
     }
 
-    rapidez (equation : string) {
+    rapidez () {
+
+        let equation : string = this.equations["rapidez"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        // Add velocidad
-        this.data.push(new Datum("velocidad", this.evaluateMathString(equation), "m/s"));
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
 
-        return new Datum("rapidez", this.evaluateMathString(equation), "m/s");
+        // Add velocidad
+        this.data.push(new Datum("velocidad", valueMathString, "m/s"));
+
+        return new Datum("rapidez", valueMathString, "m/s");
     }
 }
 
