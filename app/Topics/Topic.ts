@@ -46,28 +46,13 @@ abstract class Topic {
                 // Found missing data of equation
                 const missingData = this.getMissingData(equation);
 
-                // console.log(nameOfEquation);
-                // console.log(missingData);
-
                 if(!this.existMissingData(missingData)) {
-
-                    // console.log("Solve missing data: " + nameOfEquation + " - MIssing data: " + missingData.join(" / "));
 
                     // Solve all missing data
                     this.solveMissingData(missingData);
 
-                    // console.log("Process equation: " + nameOfEquation);
-
-                    if(nameOfEquation === "velocidad_final") {
-                        console.log(this.data);
-                    }
-
                     // Solve equation
                     this.data.push(this.processEquation(nameOfEquation));
-
-                    if(nameOfEquation === "velocidad_final") {
-                        console.log(this.data);
-                    }
                 }
             }
         }
@@ -121,10 +106,16 @@ abstract class Topic {
 
     getValueMatchString (equation : string) : string {
 
-        let valueMathString : string;
+        let valueMathString : string = "0";
 
         try {
             valueMathString = this.evaluateMathString(equation);
+
+            // Verify that is a valid value
+            if((valueMathString === null && valueMathString !== "") || (valueMathString == "Infinity")) {
+                valueMathString = "0";
+            }
+
         } catch (err) {
             valueMathString = "0";
         }

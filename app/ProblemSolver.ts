@@ -55,9 +55,6 @@ class ProblemSolver {
 
                 this.loadData(entitiesWithoutRequested).then( () => {
 
-                    // console.log(this.requested);
-                    // console.log(this.data);
-
                     // When we have all the data, we process it
                     let problemSolved : ReturnResolution;
 
@@ -93,7 +90,6 @@ class ProblemSolver {
                 throw new Error(errResolution.message);
 
             throw new Error("Error when check the problem");
-
         }
 
         // Return the response
