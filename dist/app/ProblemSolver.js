@@ -77,15 +77,7 @@ class ProblemSolver {
     loadRequestedData(entities) {
         entities.forEach((entity, iEntity) => {
             if (entity.name === "se_solicita") {
-                // Get next entity that is data we need
-                let value = entities[iEntity + 1].value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                // Parse and remove accents
-                value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                // Remove spaces and replace with underscore
-                value = value.replace(/ /g, "_");
-                if (value === "metros")
-                    value = "distancia";
-                this.requested.push(value);
+                this.requested.push(this.parseAndNormalizeDataName(entities[iEntity + 1].value));
             }
         });
     }
@@ -119,6 +111,17 @@ class ProblemSolver {
         for (const dataObject of data) {
             this.data.push(new Datum_1.Datum(dataObject.name, dataObject.value, dataObject.unit));
         }
+    }
+    parseAndNormalizeDataName(value) {
+        // Get next entity that is data we need
+        value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        // Parse and remove accents
+        value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        // Remove spaces and replace with underscore
+        value = value.replace(/ /g, "_");
+        if (value === "metros")
+            value = "distancia";
+        return value;
     }
 }
 exports.ProblemSolver = ProblemSolver;

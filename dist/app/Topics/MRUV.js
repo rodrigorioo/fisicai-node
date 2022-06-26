@@ -21,62 +21,77 @@ class MRUV extends Topic_1.Topic {
             'aceleracion': '(velocidad - velocidad_inicial) / (tiempo - tiempo_inicial)',
         };
     }
-    processEquation(nameOfEquation, equation) {
-        return this[nameOfEquation](equation);
+    processEquation(nameOfEquation) {
+        return this[nameOfEquation]();
     }
     // Equations
-    velocidad_inicial(equation) {
+    velocidad_inicial() {
         return new Datum_1.Datum("velocidad_inicial", "0", "m/s");
     }
-    velocidad_final(equation) {
+    velocidad_final() {
+        let equation = this.equations["velocidad_final"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
-        return new Datum_1.Datum("velocidad_final", this.evaluateMathString(equation), "m/s");
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
+        return new Datum_1.Datum("velocidad_final", valueMathString, "m/s");
     }
-    velocidad(equation) {
+    velocidad() {
+        let equation = this.equations["velocidad"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
         // Add velocidad final
-        this.data.push(new Datum_1.Datum("velocidad_final", this.evaluateMathString(equation), "m/s"));
-        return new Datum_1.Datum("velocidad", this.evaluateMathString(equation), "m/s");
+        this.data.push(new Datum_1.Datum("velocidad_final", valueMathString, "m/s"));
+        return new Datum_1.Datum("velocidad", valueMathString, "m/s");
     }
-    rapidez(equation) {
+    rapidez() {
+        let equation = this.equations["rapidez"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
         // Add velocidad
-        this.data.push(new Datum_1.Datum("velocidad", this.evaluateMathString(equation), "m/s"));
+        this.data.push(new Datum_1.Datum("velocidad", valueMathString, "m/s"));
         // Add velocidad final
-        this.data.push(new Datum_1.Datum("velocidad_final", this.evaluateMathString(equation), "m/s"));
-        return new Datum_1.Datum("rapidez", this.evaluateMathString(equation), "m/s");
+        this.data.push(new Datum_1.Datum("velocidad_final", valueMathString, "m/s"));
+        return new Datum_1.Datum("rapidez", valueMathString, "m/s");
     }
-    tiempo_inicial(equation) {
+    tiempo_inicial() {
         return new Datum_1.Datum("tiempo_inicial", "0", "s");
     }
-    tiempo_final(equation) {
+    tiempo_final() {
         return new Datum_1.Datum("tiempo_final", "0", "s");
     }
-    tiempo(equation) {
+    tiempo() {
+        let equation = this.equations["tiempo"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
-        return new Datum_1.Datum("tiempo", this.evaluateMathString(equation), "s");
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
+        return new Datum_1.Datum("tiempo", valueMathString, "s");
     }
-    aceleracion(equation) {
+    aceleracion() {
+        let equation = this.equations["aceleracion"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
-        return new Datum_1.Datum("aceleracion", this.evaluateMathString(equation), "m/s2");
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
+        return new Datum_1.Datum("aceleracion", valueMathString, "m/s2");
     }
-    posicion_inicial(equation) {
+    posicion_inicial() {
         return new Datum_1.Datum("posicion_inicial", "0", "m");
     }
-    posicion_final(equation) {
+    posicion_final() {
         return new Datum_1.Datum("posicion_final", "0", "m");
     }
-    posicion(equation) {
+    posicion() {
         return new Datum_1.Datum("posicion", "0", "m");
     }
 }

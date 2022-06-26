@@ -16,7 +16,7 @@ class Datum {
         this.name = "";
         this.value = "";
         this.unit = "";
-        this.name = (name) ? name : "";
+        this.name = (name) ? name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, "_") : "";
         this.value = (value) ? value : "";
         this.unit = (unit) ? unit : "";
         // Parse Unit

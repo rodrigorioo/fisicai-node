@@ -17,32 +17,41 @@ class MRU extends Topic_1.Topic {
             'rapidez': '(distancia - posicion_inicial) / tiempo',
         };
     }
-    processEquation(nameOfEquation, equation) {
-        return this[nameOfEquation](equation);
+    processEquation(nameOfEquation) {
+        return this[nameOfEquation]();
     }
     // Equations
-    distancia(equation) {
+    distancia() {
+        let equation = this.equations["distancia"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
-        return new Datum_1.Datum("distancia", this.evaluateMathString(equation), "m");
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
+        return new Datum_1.Datum("distancia", valueMathString, "m");
     }
-    velocidad(equation) {
+    velocidad() {
+        let equation = this.equations["velocidad"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
-        return new Datum_1.Datum("velocidad", this.evaluateMathString(equation), "m/s");
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
+        return new Datum_1.Datum("velocidad", valueMathString, "m/s");
     }
-    tiempo(equation) {
+    tiempo() {
+        let equation = this.equations["tiempo"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
-        return new Datum_1.Datum("tiempo", this.evaluateMathString(equation), "s");
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
+        return new Datum_1.Datum("tiempo", valueMathString, "s");
     }
-    posicion_inicial(equation) {
+    posicion_inicial() {
         return new Datum_1.Datum("posicion_inicial", "0", "m");
     }
-    hora(equation) {
+    hora() {
         let date;
         let time = 0;
         for (const datum of this.data) {
@@ -59,13 +68,16 @@ class MRU extends Topic_1.Topic {
         difference.toObject();
         return new Datum_1.Datum("hora", `Dias: ${difference.days} - Hora: ${difference.hours}:${difference.minutes}:${difference.seconds}`, "");
     }
-    rapidez(equation) {
+    rapidez() {
+        let equation = this.equations["rapidez"];
         this.data.forEach((datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
+        // Get value match string
+        let valueMathString = this.getValueMatchString(equation);
         // Add velocidad
-        this.data.push(new Datum_1.Datum("velocidad", this.evaluateMathString(equation), "m/s"));
-        return new Datum_1.Datum("rapidez", this.evaluateMathString(equation), "m/s");
+        this.data.push(new Datum_1.Datum("velocidad", valueMathString, "m/s"));
+        return new Datum_1.Datum("rapidez", valueMathString, "m/s");
     }
 }
 exports.MRU = MRU;
