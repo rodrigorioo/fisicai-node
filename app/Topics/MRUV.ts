@@ -38,87 +38,112 @@ class MRUV extends Topic {
         }
     }
 
-    processEquation(nameOfEquation : keyof MRUVOperationsMethods, equation : string) : Datum {
-        return this[nameOfEquation](equation) as Datum;
+    processEquation(nameOfEquation : keyof MRUVOperationsMethods) : Datum {
+        return this[nameOfEquation]() as Datum;
     }
 
     // Equations
 
-    velocidad_inicial (equation : string) : Datum {
+    velocidad_inicial () : Datum {
         return new Datum("velocidad_inicial", "0", "m/s");
     }
 
-    velocidad_final (equation : string) : Datum {
+    velocidad_final () : Datum {
+
+        let equation : string = this.equations["velocidad_final"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        return new Datum("velocidad_final", this.evaluateMathString(equation), "m/s");
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
+
+        return new Datum("velocidad_final", valueMathString, "m/s");
     }
 
-    velocidad (equation : string) : Datum {
+    velocidad () : Datum {
+
+        let equation : string = this.equations["velocidad"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
+
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
 
         // Add velocidad final
-        this.data.push(new Datum("velocidad_final", this.evaluateMathString(equation), "m/s"));
+        this.data.push(new Datum("velocidad_final", valueMathString, "m/s"));
 
-        return new Datum("velocidad", this.evaluateMathString(equation), "m/s");
+        return new Datum("velocidad", valueMathString, "m/s");
     }
 
-    rapidez (equation : string) : Datum {
+    rapidez () : Datum {
+
+        let equation : string = this.equations["rapidez"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
+
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
 
         // Add velocidad
-        this.data.push(new Datum("velocidad", this.evaluateMathString(equation), "m/s"));
+        this.data.push(new Datum("velocidad", valueMathString, "m/s"));
 
         // Add velocidad final
-        this.data.push(new Datum("velocidad_final", this.evaluateMathString(equation), "m/s"));
+        this.data.push(new Datum("velocidad_final", valueMathString, "m/s"));
 
-        return new Datum("rapidez", this.evaluateMathString(equation), "m/s");
+        return new Datum("rapidez", valueMathString, "m/s");
     }
 
-    tiempo_inicial (equation : string) : Datum {
+    tiempo_inicial () : Datum {
         return new Datum("tiempo_inicial", "0", "s");
     }
 
-    tiempo_final (equation : string) : Datum {
+    tiempo_final () : Datum {
         return new Datum("tiempo_final", "0", "s");
     }
 
-    tiempo (equation : string) : Datum {
+    tiempo () : Datum {
+
+        let equation : string = this.equations["tiempo"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        return new Datum("tiempo", this.evaluateMathString(equation), "s");
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
+
+        return new Datum("tiempo", valueMathString, "s");
     }
 
-    aceleracion (equation : string) : Datum {
+    aceleracion () : Datum {
+
+        let equation : string = this.equations["aceleracion"] as string;
 
         this.data.forEach( (datum : Datum) => {
             equation = equation.replace(datum.name, datum.value);
         });
 
-        return new Datum("aceleracion", this.evaluateMathString(equation), "m/s2");
+        // Get value match string
+        let valueMathString : string = this.getValueMatchString(equation);
+
+        return new Datum("aceleracion", valueMathString, "m/s2");
     }
 
-    posicion_inicial (equation : string) : Datum {
+    posicion_inicial () : Datum {
         return new Datum("posicion_inicial", "0", "m");
     }
 
-    posicion_final (equation : string) : Datum {
+    posicion_final () : Datum {
         return new Datum("posicion_final", "0", "m");
     }
 
-    posicion (equation : string) : Datum {
+    posicion () : Datum {
         return new Datum("posicion", "0", "m");
     }
 
