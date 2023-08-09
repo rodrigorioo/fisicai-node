@@ -2,7 +2,7 @@ import express, { Express } from 'express';
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-import routes from "./routes";
+import routes from "./app/routes";
 require('dotenv').config();
 
 // Setup
