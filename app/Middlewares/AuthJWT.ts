@@ -1,9 +1,15 @@
 import {authConfig} from "../config/auth.config";
 import {Request, Response, NextFunction} from "express";
-import {JsonWebTokenError, JwtPayload, VerifyErrors, VerifyOptions} from "jsonwebtoken";
+import {JsonWebTokenError, JwtPayload} from "jsonwebtoken";
 
 const jwt = require("jsonwebtoken");
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     let token = req.headers["x-access-token"];
 

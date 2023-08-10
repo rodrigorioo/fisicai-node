@@ -6,6 +6,7 @@ const APIController = {
 
     login: userService.login,
     register: userService.register,
+    auth: userService.checkAuth,
 };
 
 export default APIController;

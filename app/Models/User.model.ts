@@ -10,15 +10,9 @@ export interface UserInterface {
 
 export class UserModel extends Model {
 
-    private email: string;
-    private password: string;
+    protected static table = "users";
 
-    constructor(email: string, password: string) {
+    constructor() {
         super();
-
-        this.table = "users";
-
-        this.email = email;
-        this.password = password;
     }
 }

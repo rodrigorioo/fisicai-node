@@ -14,5 +14,10 @@ router.post(
 
 router.post('/login', APIController.login);
 router.post('/register', APIController.register);
+router.get(
+    '/auth',
+    [AuthJWT.verifyToken],
+    APIController.auth
+);
 
 export default router;

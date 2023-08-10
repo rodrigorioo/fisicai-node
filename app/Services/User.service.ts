@@ -8,6 +8,11 @@ const jwt = require('jsonwebtoken');
 
 class UserService {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     login(req : Request, res : Response) {
 
         // Get data from request
@@ -15,8 +20,7 @@ class UserService {
         const password: string = req.body.password || req.query.password;
 
         // Get user
-        const user = new UserModel(email, password);
-        user.findBy('email', email).then( (user ) => {
+        UserModel.findBy('email', email).then( (user ) => {
 
             // If the user was founded, verify password
             const passwordIsValid = bcrypt.compareSync(
@@ -57,6 +61,11 @@ class UserService {
         });
     }
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     register(req : Request, res : Response) {
 
         // Get data from request
@@ -64,9 +73,7 @@ class UserService {
         const password: string = req.body.password || req.query.password;
 
         // Get user
-        const user = new UserModel(email, password);
-
-        user.findBy('email', email).then( (user) => {
+        UserModel.findBy('email', email).then( (user) => {
 
             res.status(409).send({
                 message: 'Usuario existe',
@@ -76,7 +83,7 @@ class UserService {
 
             // Si el usuario no existe
             if(e instanceof NotFoundException) {
-                user.create({
+                UserModel.create({
                     email,
                     password: bcrypt.hashSync(password, 8),
                 }).then( (user) => {
@@ -98,6 +105,23 @@ class UserService {
                     message: 'Error al consultar el usuario',
                 });
             }
+        });
+    }
+
+    checkAuth (req : Request, res : Response) {
+
+        // Get user
+        UserModel.findById(req.userId).then( (user) => {
+
+            res.json({
+                email: (user as UserInterface).email,
+            });
+
+        }).catch( (err) => {
+
+            res.status(err.getCode()).send({
+                message: err.message,
+            });
         });
     }
 }

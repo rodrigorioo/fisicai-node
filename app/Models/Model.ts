@@ -1,54 +1,51 @@
 import { db } from "../database/db";
 import { Pool } from "mysql";
-import {success} from "concurrently/dist/src/defaults";
 import {ModelException} from "../Exceptions/Models/ModelException";
 import {NotFoundException} from "../Exceptions/Models/NotFoundException";
-import {fail} from "assert";
 
 export class Model {
 
-    protected db: Pool = db;
-    protected table: string = "";
+    protected static db: Pool = db;
+    protected static table: string = "";
 
     constructor() {}
 
-    findById (id: number) {
+    /**
+     * Find row by id field
+     * @param id
+     */
+    static findById (id: number) {
 
-        this.db.query(`SELECT * FROM ${this.table} WHERE id = ${id}`, (err, res) => {
-            // if (err) {
-            //     console.log("error: ", err);
-            //     result(err, null);
-            //     return;
-            // }
-            //
-            // if (res.length) {
-            //     console.log("found tutorial: ", res[0]);
-            //     result(null, res[0]);
-            //     return;
-            // }
-            //
-            // // not found Tutorial with the id
-            // result({ kind: "not_found" }, null);
+        return new Promise<object>( (success, failure) => {
+            const query = `SELECT * FROM ${this.table} WHERE id = ${id}`;
 
-            if (err) {
-                throw new ModelException(err.message);
-            }
+            this.db.query(query, (err, res) => {
 
-            if (res.length) {
-                return res[0];
-            }
+                if (err) {
+                    failure(new ModelException(err.message));
+                }
 
-            throw new NotFoundException();
+                if (res.length) {
+                    return success(res[0]);
+                }
+
+                failure(new NotFoundException());
+            });
         });
     }
 
-    findBy (column: string, value: string|number) {
+    /**
+     * Field row by column name and value
+     * @param column
+     * @param value
+     */
+    static findBy (column: string, value: string|number) {
 
         return new Promise<object>( (success, failure) => {
 
             let queryValue = `${value}`;
 
-            if(typeof value === "string") {
+            if (typeof value === "string") {
                 queryValue = `"${value}"`;
             }
 
@@ -69,7 +66,11 @@ export class Model {
         });
     }
 
-    create (columns: object) {
+    /**
+     * Create new row sending columns object with column names and values
+     * @param columns
+     */
+    static create (columns: object) {
 
         return new Promise( (success, failure) => {
 
