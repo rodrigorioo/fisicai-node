@@ -44,7 +44,7 @@ export class Model {
 
     findBy (column: string, value: string|number) {
 
-        return new Promise( (success, failure) => {
+        return new Promise<object>( (success, failure) => {
 
             let queryValue = `${value}`;
 
