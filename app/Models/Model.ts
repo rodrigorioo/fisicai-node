@@ -22,7 +22,7 @@ export class Model {
             this.db.query(query, (err, res) => {
 
                 if (err) {
-                    failure(new ModelException(err.message));
+                    return failure(new ModelException(err.message));
                 }
 
                 if (res.length) {
@@ -54,7 +54,7 @@ export class Model {
             this.db.query(query, (err, res) => {
 
                 if (err) {
-                    failure(new ModelException(err.message));
+                    return failure(new ModelException(err.message));
                 }
 
                 if (res.length) {
@@ -98,7 +98,7 @@ export class Model {
             this.db.query(query, (err, res) => {
 
                 if (err) {
-                    failure(new ModelException(err.message));
+                    return failure(new ModelException(err.message));
                 }
 
                 success(res);
