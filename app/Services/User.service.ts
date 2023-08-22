@@ -13,7 +13,7 @@ class UserService {
      * @param req
      * @param res
      */
-    login(req : Request, res : Response) {
+    login (req : Request, res : Response) {
 
         // Get data from request
         const email: string =  req.body.email || req.query.email;
@@ -66,7 +66,7 @@ class UserService {
      * @param req
      * @param res
      */
-    register(req : Request, res : Response) {
+    register (req : Request, res : Response) {
 
         // Get data from request
         const email: string =  req.body.email || req.query.email;

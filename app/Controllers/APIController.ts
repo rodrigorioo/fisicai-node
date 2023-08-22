@@ -3,6 +3,7 @@ import {problemService} from "../Services/Problem.service";
 
 const APIController = {
     solveProblem: problemService.solve,
+    getProblems: problemService.get,
 
     login: userService.login,
     register: userService.register,

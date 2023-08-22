@@ -1,6 +1,8 @@
 import {DataObj, ProblemSolver} from "../Models/ProblemSolver";
 import {Request, Response} from "express";
 import {Operations} from "../Models/Topics/Topic";
+import {ProblemModel} from "../Models/Problem.model";
+import {OkPacket} from "mysql";
 
 interface IResolution {
     requested : Array<keyof Operations>,
@@ -9,7 +11,12 @@ interface IResolution {
 
 class ProblemService {
 
-    solve (req : Request, res : Response) {
+    /**
+     * Solve the problem and response with data, requested data and resolution
+     * @param req
+     * @param res
+     */
+    solve (req: Request, res: Response) {
 
         const problem: string = req.query.problem || req.body.problem;
         const resolution: IResolution = req.query.resolution || req.body.resolution;
@@ -63,12 +70,23 @@ class ProblemService {
             // Solve the problem
             problemSolver.processProblem().then((problemSolved) => {
 
-                res.json(problemSolved);
+                // Load problem to database
+                ProblemModel.create({
+                    user_id: req.userId,
+                    problem,
+                    processed_data: JSON.stringify(problemSolved),
+                }).then( (problemModel: OkPacket) => {
+
+                    const problemId = problemModel.insertId;
+
+                    res.json(problemSolved);
+
+                });
 
             }).catch((err) => {
 
                 res.status(500).send({
-                    message: err.message,
+                    message: `Solve problem error: ${err.message}`,
                 });
             });
 
@@ -78,6 +96,29 @@ class ProblemService {
         res.status(422).send({
             message: 'Problem or resolution parameter needed',
         });
+    }
+
+    /**
+     * Return all problems of the auth user
+     * @param req
+     * @param res
+     */
+    get (req: Request, res: Response) {
+
+        ProblemModel.get({
+            user_id: req.userId
+        })
+            .then( (problems) => {
+
+            res.json(problems);
+
+        }).catch( (err) => {
+            res.status(500).send({
+                message: err.message,
+            });
+        });
+
+
     }
 }
 

@@ -29,7 +29,7 @@ class ProblemSolver {
 
     }
 
-    processProblem () : Promise<ReturnResolution> {
+    processProblem (): Promise<ReturnResolution> {
 
         return new Promise<ReturnResolution>( (success, failure) => {
 

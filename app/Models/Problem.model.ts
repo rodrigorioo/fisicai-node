@@ -1,12 +1,18 @@
 import {Model} from "./Model";
 
-class ProblemModel extends Model {
+export interface ProblemInterface {
+    id: number,
+    user_id: number,
+    problem: string,
+    created_at: string,
+    updated_at: string,
+}
 
-    private problem: string;
+export class ProblemModel extends Model {
 
-    constructor(problem: string) {
+    protected static table = "problems";
+
+    constructor() {
         super();
-
-        this.problem = problem;
     }
 }

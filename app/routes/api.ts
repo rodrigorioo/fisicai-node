@@ -5,13 +5,19 @@ import {AuthJWT} from "../Middlewares/AuthJWT";
 // Controllers
 import APIController from "../Controllers/APIController";
 
-// Solve problem
+// Problems
 router.post(
     '/solve-problem',
     [AuthJWT.verifyToken],
     APIController.solveProblem
 );
+router.get(
+    '/problems',
+    [AuthJWT.verifyToken],
+    APIController.getProblems
+);
 
+// User
 router.post('/login', APIController.login);
 router.post('/register', APIController.register);
 router.get(
