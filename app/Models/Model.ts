@@ -69,8 +69,9 @@ export class Model {
     /**
      * Find rows by columns names and values
      * @param columns
+     * @param orderBy
      */
-    static get (columns: object) {
+    static get (columns: object, orderBy: object|null = null) {
 
         return new Promise<object>( (success, failure) => {
 
@@ -98,7 +99,30 @@ export class Model {
                 }
             });
 
-            const query = `SELECT * FROM ${this.table} WHERE ${wheres}`;
+            // Order by
+            let orders = "";
+            if(orderBy) {
+
+                // Get columns and directions
+                const orderByColumns = Object.keys(orderBy);
+                const orderByDirections = Object.values(orderBy);
+
+                orderByColumns.forEach( (column, iColumn) => {
+
+                    const direction = orderByDirections[iColumn];
+
+                    if(orders !== "") {
+                        orders += ", ";
+                    }
+
+                    orders += `${column} ${direction}`;
+                });
+
+                // Add ORDER BY
+                orders = ` ORDER BY ${orders}`;
+            }
+
+            const query = `SELECT * FROM ${this.table} WHERE ${wheres} ${orders}`;
 
             this.db.query(query, (err, res) => {
 

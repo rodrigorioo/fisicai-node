@@ -2,6 +2,7 @@ import {Wit, Entity} from "./Wit";
 import {Datum} from "./Datum";
 import {Problem} from "./Problem";
 import {Operations} from "./Topics/Topic";
+import {NotFoundException} from "../Exceptions/Models/NotFoundException";
 
 interface ReturnResolution {
     data: Array<Datum>,
@@ -22,13 +23,14 @@ class ProblemSolver {
     data : Array<Datum>; // Data of problem
 
     constructor (problem : string, requested : Array<keyof Operations> = []) {
-
         this.problem = problem;
         this.requested = requested;
         this.data = [];
-
     }
 
+    /**
+     *
+     */
     processProblem (): Promise<ReturnResolution> {
 
         return new Promise<ReturnResolution>( (success, failure) => {
@@ -56,11 +58,11 @@ class ProblemSolver {
                 this.loadData(entitiesWithoutRequested).then( () => {
 
                     // When we have all the data, we process it
-                    let problemSolved : ReturnResolution;
+                    let problemSolved: ReturnResolution;
 
                     try {
                         problemSolved = this.resolveProblem();
-                    } catch(errResolveProblem : unknown) {
+                    } catch(errResolveProblem: unknown) {
                         return failure(errResolveProblem);
                     }
 
@@ -74,7 +76,7 @@ class ProblemSolver {
         });
     }
 
-    resolveProblem () : ReturnResolution {
+    resolveProblem (): ReturnResolution {
 
         // When we have all the data, we process it
         const problem = new Problem(this.requested, this.data);
@@ -84,10 +86,10 @@ class ProblemSolver {
 
         try {
             resolution = problem.check(this.requested, this.data);
-        } catch(errResolution : unknown) {
+        } catch(errorCheck: unknown) {
 
-            if(errResolution instanceof Error)
-                throw new Error(errResolution.message);
+            if(errorCheck instanceof NotFoundException)
+                throw errorCheck;
 
             throw new Error("Error when check the problem");
         }
@@ -100,6 +102,10 @@ class ProblemSolver {
         };
     }
 
+    /**
+     *
+     * @param entities
+     */
     loadRequestedData (entities : Array<Entity>) : void {
 
         entities.forEach( (entity : Entity, iEntity : number) => {
@@ -110,6 +116,10 @@ class ProblemSolver {
         });
     }
 
+    /**
+     *
+     * @param entities
+     */
     loadData (entities : Array<Entity>) : Promise<void> {
 
         return new Promise<void>( async (success, failure) => {
@@ -134,7 +144,7 @@ class ProblemSolver {
 
                 } else {
 
-                    // It it's not, we load the new entities
+                    // If it's not, we load the new entities
                     await this.loadData(responseDatumLoad).catch((errLoadData: string) => {
                         return failure(errLoadData);
                     });
@@ -147,6 +157,10 @@ class ProblemSolver {
         });
     }
 
+    /**
+     *
+     * @param data
+     */
     addData (data : Array<DataObj>) : void {
 
         for(const dataObject of data) {
@@ -155,6 +169,10 @@ class ProblemSolver {
 
     }
 
+    /**
+     *
+     * @param value
+     */
     parseAndNormalizeDataName (value : string) : keyof Operations {
 
         // Get next entity that is data we need

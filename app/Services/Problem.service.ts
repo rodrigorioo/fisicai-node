@@ -107,6 +107,8 @@ class ProblemService {
 
         ProblemModel.get({
             user_id: req.userId
+        }, {
+            id: "DESC",
         })
             .then( (problems) => {
 

@@ -2,6 +2,7 @@ import {Datum} from "./Datum";
 import {Operations, Topic} from "./Topics/Topic";
 import {MRU} from "./Topics/MRU";
 import {MRUV} from "./Topics/MRUV";
+import {TopicNotFound} from "../Exceptions/Problem/TopicNotFound";
 
 class Problem {
 
@@ -58,10 +59,15 @@ class Problem {
         });
     }
 
-    check (requested : Array<keyof Operations>, data : Array<Datum>) : Array<Datum> {
+    /**
+     *
+     * @param requested
+     * @param data
+     */
+    check (requested: Array<keyof Operations>, data: Array<Datum>): Array<Datum> {
 
         if(!this.topic) {
-            throw new Error("Topic not founded");
+            throw new TopicNotFound();
         }
 
         // Set data to topic
