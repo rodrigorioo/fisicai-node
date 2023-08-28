@@ -2,7 +2,7 @@ import {Wit, Entity} from "./Wit";
 import {Datum} from "./Datum";
 import {Problem} from "./Problem";
 import {Operations} from "./Topics/Topic";
-import {NotFoundException} from "../Exceptions/Models/NotFoundException";
+import {TopicNotFound} from "../Exceptions/Problem/TopicNotFound";
 
 interface ReturnResolution {
     data: Array<Datum>,
@@ -88,7 +88,7 @@ class ProblemSolver {
             resolution = problem.check(this.requested, this.data);
         } catch(errorCheck: unknown) {
 
-            if(errorCheck instanceof NotFoundException)
+            if(errorCheck instanceof TopicNotFound)
                 throw errorCheck;
 
             throw new Error("Error when check the problem");
@@ -106,7 +106,7 @@ class ProblemSolver {
      *
      * @param entities
      */
-    loadRequestedData (entities : Array<Entity>) : void {
+    loadRequestedData (entities : Array<Entity>): void {
 
         entities.forEach( (entity : Entity, iEntity : number) => {
 
@@ -120,7 +120,7 @@ class ProblemSolver {
      *
      * @param entities
      */
-    loadData (entities : Array<Entity>) : Promise<void> {
+    loadData (entities : Array<Entity>): Promise<void> {
 
         return new Promise<void>( async (success, failure) => {
 
@@ -161,7 +161,7 @@ class ProblemSolver {
      *
      * @param data
      */
-    addData (data : Array<DataObj>) : void {
+    addData (data : Array<DataObj>): void {
 
         for(const dataObject of data) {
             this.data.push(new Datum(dataObject.name, dataObject.value, dataObject.unit));
@@ -173,7 +173,7 @@ class ProblemSolver {
      *
      * @param value
      */
-    parseAndNormalizeDataName (value : string) : keyof Operations {
+    parseAndNormalizeDataName (value : string): keyof Operations {
 
         // Get next entity that is data we need
         value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");

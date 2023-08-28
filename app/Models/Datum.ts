@@ -9,7 +9,7 @@ class Datum {
     value : string = "";
     unit : string = "";
 
-    constructor (name? : string, value? : string, unit? : string) {
+    constructor (name?: string, value?: string, unit?: string) {
 
         this.name = (name) ? name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, "_") : "";
         this.value = (value) ? value : "";
@@ -19,7 +19,11 @@ class Datum {
         this.parseUnit();
     }
 
-    loadEntity (entity : Entity) : LoadEntityReturn {
+    /**
+     *
+     * @param entity
+     */
+    loadEntity (entity: Entity): LoadEntityReturn {
 
         return new Promise<any>( async (success, failure) => {
 
@@ -52,7 +56,7 @@ class Datum {
                 case "wit$datetime":
 
                     // Wit detects "EN UN SEGUNDO" like a DateTime
-                    // For fix this we remove all ancestor words and we send this new value to Wit for extract the time
+                    // For fix this we remove all ancestor words, and we send this new value to Wit for extract the time
                     if(entity.grain === "second") {
 
                         // Create new value to send
@@ -97,7 +101,11 @@ class Datum {
         });
     }
 
-    getName (value : string) : string {
+    /**
+     *
+     * @param value
+     */
+    getName (value: string): string {
 
         let returnName : string = "";
 
@@ -114,11 +122,19 @@ class Datum {
         return returnName;
     }
 
-    getUnit (value : string) : string {
+    /**
+     *
+     * @param value
+     */
+    getUnit (value: string): string {
         return value.replace(/\d+/g, '').replace(' ', '').toLowerCase();
     }
 
-    unitTranslate (unit : string) : string {
+    /**
+     *
+     * @param unit
+     */
+    unitTranslate (unit: string): string {
 
         let returnUnit : string = "";
 
@@ -132,7 +148,11 @@ class Datum {
         return returnUnit;
     }
 
-    getValue (value : string) : string {
+    /**
+     *
+     * @param value
+     */
+    getValue (value: string): string {
 
         let regexMatch : RegExpMatchArray | null = [];
 
@@ -141,7 +161,10 @@ class Datum {
         return (regexMatch) ? regexMatch[0] : "";
     }
 
-    parseUnit () : void {
+    /**
+     *
+     */
+    parseUnit (): void {
 
         switch(this.name) {
 
