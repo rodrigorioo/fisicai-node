@@ -3,27 +3,28 @@ const router : Router = express.Router();
 import {AuthJWT} from "../Middlewares/AuthJWT";
 
 // Controllers
-import APIController from "../Controllers/APIController";
+import ProblemController from "../Controllers/ProblemController";
+import UserController from "../Controllers/UserController";
 
 // Problems
 router.post(
     '/solve-problem',
     [AuthJWT.verifyToken],
-    APIController.solveProblem
+    ProblemController.solve
 );
 router.get(
     '/problems',
     [AuthJWT.verifyToken],
-    APIController.getProblems
+    ProblemController.get
 );
 
 // User
-router.post('/login', APIController.login);
-router.post('/register', APIController.register);
+router.post('/login', UserController.login);
+router.post('/register', UserController.register);
 router.get(
     '/auth',
     [AuthJWT.verifyToken],
-    APIController.auth
+    UserController.checkAuth
 );
 
 export default router;
