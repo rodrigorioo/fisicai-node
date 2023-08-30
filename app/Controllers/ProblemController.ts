@@ -10,6 +10,11 @@ export interface IResolution {
 
 export default {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     solve (req: Request, res: Response) {
 
         const problem: string = req.query.problem || req.body.problem;
@@ -69,6 +74,11 @@ export default {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     get (req: Request, res: Response) {
 
         // Init service

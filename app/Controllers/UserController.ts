@@ -2,6 +2,12 @@ import {Request, Response} from "express";
 import {UserService} from "../Services/User.service";
 
 export default {
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
     login (req: Request, res: Response) {
 
         // Get data from request
@@ -21,6 +27,11 @@ export default {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     register (req: Request, res: Response) {
 
         // Get data from request

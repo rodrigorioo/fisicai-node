@@ -1,61 +1,60 @@
 import {UserModel, UserInterface} from "../Models/User.model";
 import {NotFoundException} from "../Exceptions/Models/NotFoundException";
-import {Request, Response} from "express";
 import {authConfig} from "../config/auth.config";
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-class UserService {
+export class UserService {
 
     /**
      *
-     * @param req
-     * @param res
+     * @param email
+     * @param password
      */
-    login (req : Request, res : Response) {
+    login (email: string, password: string) {
 
-        // Get data from request
-        const email: string =  req.body.email || req.query.email;
-        const password: string = req.body.password || req.query.password;
+        return new Promise( (resolve, reject) => {
 
-        // Get user
-        UserModel.findBy('email', email).then( (user ) => {
+            // Get user
+            UserModel.findBy('email', email).then( (user ) => {
 
-            // If the user was founded, verify password
-            const passwordIsValid = bcrypt.compareSync(
-                password,
-                (user as UserInterface).password
-            );
+                // If the user was founded, verify password
+                const passwordIsValid = bcrypt.compareSync(
+                    password,
+                    (user as UserInterface).password
+                );
 
-            if (!passwordIsValid) {
-                return res.status(401).send({
-                    message: "Invalid Password!"
+                if (!passwordIsValid) {
+                    return reject({
+                        code: 401,
+                        message: "Invalid Password!",
+                    });
+                }
+
+                // Create access token
+                const token = jwt.sign(
+                    {
+                        id: (user as UserInterface).id
+                    },
+                    authConfig.secret,
+                    {
+                        algorithm: 'HS256',
+                        allowInsecureKeySizes: true,
+                        expiresIn: 2628003, // 1 month
+                    });
+
+                return resolve({
+                    id: (user as UserInterface).id,
+                    email: (user as UserInterface).email,
+                    accessToken: token,
                 });
-            }
 
-            // Create access token
-            const token = jwt.sign(
-                {
-                    id: (user as UserInterface).id
-                },
-                authConfig.secret,
-                {
-                    algorithm: 'HS256',
-                    allowInsecureKeySizes: true,
-                    expiresIn: 2628003, // 1 month
+            }).catch( (err) => {
+                return reject({
+                    code: err.getCode(),
+                    message: err.message,
                 });
-
-            res.status(200).send({
-                id: (user as UserInterface).id,
-                email: (user as UserInterface).email,
-                accessToken: token,
-            });
-
-        }).catch( (err) => {
-
-            res.status(err.getCode()).send({
-                message: err.message,
             });
 
         });
@@ -63,67 +62,72 @@ class UserService {
 
     /**
      *
-     * @param req
-     * @param res
+     * @param email
+     * @param password
      */
-    register (req : Request, res : Response) {
+    register (email: string, password: string) {
 
-        // Get data from request
-        const email: string =  req.body.email || req.query.email;
-        const password: string = req.body.password || req.query.password;
+        return new Promise( (resolve, reject) => {
 
-        // Get user
-        UserModel.findBy('email', email).then( (user) => {
+            // Get user
+            UserModel.findBy('email', email).then( (user) => {
 
-            res.status(409).send({
-                message: 'Usuario existe',
+                return reject({
+                    code: 409,
+                    message: 'Usuario existe',
+                });
+
+            }).catch( (e) => {
+
+                // Si el usuario no existe
+                if(e instanceof NotFoundException) {
+                    UserModel.create({
+                        email,
+                        password: bcrypt.hashSync(password, 8),
+                    }).then( (user) => {
+
+                        return resolve({
+                            message: 'Usuario creado con éxito',
+                        });
+
+                    }).catch( (err) => {
+
+                        return reject({
+                            code: e.getCode(),
+                            message: err.message,
+                        });
+
+                    });
+
+                } else {
+                    return reject({
+                        code: e.getCode(),
+                        message: 'Error al consultar el usuario',
+                    });
+                }
             });
 
-        }).catch( (e) => {
-
-            // Si el usuario no existe
-            if(e instanceof NotFoundException) {
-                UserModel.create({
-                    email,
-                    password: bcrypt.hashSync(password, 8),
-                }).then( (user) => {
-
-                    res.status(200).send({
-                        message: 'Usuario creado con éxito',
-                    });
-
-                }).catch( (err) => {
-
-                    res.status(err.getCode()).send({
-                        message: err.message,
-                    });
-
-                });
-
-            } else {
-                res.status(e.getCode()).send({
-                    message: 'Error al consultar el usuario',
-                });
-            }
         });
     }
 
-    checkAuth (req : Request, res : Response) {
+    checkAuth (userId: number) {
 
-        // Get user
-        UserModel.findById(req.userId).then( (user) => {
+        return new Promise( (resolve, reject) => {
+            // Get user
+            UserModel.findById(userId).then( (user) => {
 
-            res.json({
-                email: (user as UserInterface).email,
-            });
+                resolve({
+                    email: (user as UserInterface).email,
+                });
 
-        }).catch( (err) => {
+            }).catch( (err) => {
 
-            res.status(err.getCode()).send({
-                message: err.message,
+                reject({
+                    code: err.getCode(),
+                    message: err.message
+                });
+
             });
         });
     }
 }
-
-export const userService = new UserService();
